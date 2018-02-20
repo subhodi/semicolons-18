@@ -4,13 +4,14 @@ const octokit = new Octokit();
 let owner;
 let repo;
 
-let authenticate = (GITHUB_TOKEN, ownerId, repoId) => {
+let authenticate = (GITHUB_TOKEN) => {
     octokit.authenticate({
         type: 'oauth',
-        token: GITHUB_TOKEN
-    })
-    owner = ownerId;
-    repo = repoId;
+        token: process.env.GITHUB_TOKEN
+    });
+    owner = process.env.OWNER;
+    repo = process.env.REPO;
+    console.log(repo)
 }
 
 let getContributers = () => octokit.repos.getCollaborators({ owner: owner, repo: repo });

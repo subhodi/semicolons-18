@@ -1,4 +1,4 @@
-const  User =require('../models/User');
+const  User =require('../models/user');
 
 let insert = (req, res, next) => {
     const user = new User({

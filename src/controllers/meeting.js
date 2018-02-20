@@ -3,17 +3,14 @@ const Meeting = require('../models/meeting');
 const github = require('./github');
 
 let insert = (req, res, next) => {
-    const githubToken = req.body.githubToken;
-    const owner = req.body.owner;
-    const repo = req.body.repo;
-    github.authenticate(githubToken, owner, repo);
+    github.authenticate();
     github.getContributers().then((result) => {
         const members = result.data;
         github.getRepoIssues().then((result) => {
             const issues = result.data;
             console.log(members[0]);
             const meeting = new Meeting({
-                name: repo,
+                name: process.env.REPO,
                 members: members,
                 issues: issues
             });

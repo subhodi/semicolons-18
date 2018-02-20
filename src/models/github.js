@@ -5,10 +5,12 @@ let owner = process.env.OWNER;
 let repo = process.env.REPO;
 
 // API key and access token 
-octokit.authenticate({
-    type: 'oauth',
-    token: process.env.GITHUB_TOKEN
-});
+process.env.GITHUB_TOKEN
+    ? octokit.authenticate({
+        type: 'oauth',
+        token: process.env.GITHUB_TOKEN
+    })
+    : console.error('GITHUB oauth token not found');
 
 let getContributers = () => octokit.repos.getCollaborators({ owner: owner, repo: repo });
 

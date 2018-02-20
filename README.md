@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/subhodi/meet-assist-js/badge.svg?branch=master)](https://coveralls.io/github/subhodi/meet-assist-js?branch=master)
 ## Setup
 ### Install dependencies
+Create `.env` file in project root directory (check `.env.example` file) to load environment variables
 ```bash
 npm install
 ```

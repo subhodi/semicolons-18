@@ -1,0 +1,17 @@
+<html>
+
+<head>
+    <title>Demo</title>
+    <script>
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", "http://localhost:3000/api/meeting", false); // false for synchronous request
+        xmlHttp.send(null);
+        console.log(xmlHttp.responseText);
+    </script>
+</head>
+
+<body>
+    <h1>Home</h1>
+</body>
+
+</html>

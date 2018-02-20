@@ -1,0 +1,32 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "tsc",
+    "test": "jest --forceExit --coverage --verbose"
+  },
+  "author": "subhodi",
+  "license": "ISC",
+  "devDependencies": {
+    "coveralls": "^3.0.0",
+    "grunt": "^1.0.2",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-uglify-es": "^3.3.0",
+    "jest": "^22.3.0",
+    "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "@octokit/rest": "^14.0.9",
+    "@types/cors": "^2.8.3",
+    "child_process": "^1.0.2",
+    "compression": "^1.7.1",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "mongoose": "^5.0.6"
+  }
+}

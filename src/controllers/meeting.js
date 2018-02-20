@@ -1,14 +1,37 @@
 
 const Meeting = require('../models/meeting');
-const github = require('./github');
+const Github = require('../models/github');
+
+let getAll = (req, res, next) => {
+    Meeting.find({}, (err, docs) => {
+        if (err) { return next(err); }
+        else {
+            res.send({
+                status: 200,
+                message: docs
+            })
+        }
+    });
+}
+
+let get = (req, res, next) => {
+    const query = req.params.name;
+    Meeting.find(query, (err, docs) => {
+        if (err) { return next(err); }
+        else {
+            res.send({
+                status: 200,
+                message: docs
+            })
+        }
+    });
+}
 
 let insert = (req, res, next) => {
-    github.authenticate();
-    github.getContributers().then((result) => {
+    Github.getContributers().then((result) => {
         const members = result.data;
-        github.getRepoIssues().then((result) => {
+        Github.getRepoIssues().then((result) => {
             const issues = result.data;
-            console.log(members[0]);
             const meeting = new Meeting({
                 name: process.env.REPO,
                 members: members,
@@ -33,19 +56,6 @@ let insert = (req, res, next) => {
 
 }
 
-let get = (req, res, next) => {
-    const query = req.params.name ? { 'name': req.params.name } : {};
-    Meeting.find(query, (err, docs) => {
-        if (err) { return next(err); }
-        else {
-            res.send({
-                status: 200,
-                message: docs
-            })
-        }
-    });
-}
-
 let update = (req, res, next) => {
     const query = req.body.query;
     const data = req.body.data;
@@ -62,7 +72,8 @@ let update = (req, res, next) => {
 }
 
 module.exports = {
-    insert,
+    getAll,
     get,
+    insert,
     update
 }

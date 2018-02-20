@@ -5,16 +5,19 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-const userControlller = require('./controllers/user');
-const meetingControlller = require('./controllers/meeting');
-const textController = require('./controllers/text');
-const githubController = require('./controllers/github');
+
+
 
 let app = express();
 let router = express.Router();
 
 // Load enviromnet variables to process.env from .env file
 dotenv.config({ path: '.env' });
+
+const userControlller = require('./controllers/user');
+const meetingControlller = require('./controllers/meeting');
+const textController = require('./controllers/text');
+const issueController = require('./controllers/issue');
 
 // Connect to MongoDB
 const mongoUrl = process.env.MONGODB_URI;
@@ -49,10 +52,15 @@ mountRoutes = () => {
   router.get('/user/:name', userControlller.get);
   router.post('/user', userControlller.insert);
 
-  router.get('/meeting', meetingControlller.get);
+  router.get('/meeting', meetingControlller.getAll);
   router.get('/meeting/:name', meetingControlller.get);
   router.post('/meeting', meetingControlller.insert);
   router.put('/meeting', meetingControlller.update);
+
+  router.get('/issue', issueController.getAll);
+  router.get('/issue/:number', issueController.get);
+  router.post('/issue', issueController.insert);
+  router.put('/issue', issueController.update);
 
   app.use('/api', router);
 }

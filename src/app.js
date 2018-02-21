@@ -14,16 +14,18 @@ let router = express.Router();
 // Load enviromnet variables to process.env from .env file
 dotenv.config({ path: '.env' });
 
-const userControlller = require('./controllers/user');
 const meetingControlller = require('./controllers/meeting');
-const textController = require('./controllers/text');
 const issueController = require('./controllers/issue');
-const textProcessController = require('./controllers/textprocess');
+
+// const textProcessController = require('./controllers/textprocess');
+// const textController = require('./controllers/text');
 
 // Connect to MongoDB
 const mongoUrl = process.env.MONGODB_URI;
 mongoose.connect(mongoUrl).then(() => {
   console.log('MongoDB connection established ' + mongoUrl);
+  console.log(require('./helpers/meeting').addSession("storage.google.com", "Hi there", ['1', '2', '3']));
+
 }).catch(err => {
   console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
 });
@@ -49,13 +51,10 @@ middleWare = () => {
 }
 
 mountRoutes = () => {
-  router.get('/user', userControlller.get);
-  router.get('/user/:name', userControlller.get);
-  router.post('/user', userControlller.insert);
 
   router.get('/meeting', meetingControlller.getAll);
   router.get('/meeting/:name', meetingControlller.get);
-  router.post('/meeting', meetingControlller.insert);
+  router.post('/meeting/populate', meetingControlller.populate);
   router.put('/meeting', meetingControlller.update);
 
   router.get('/issue', issueController.getAll);

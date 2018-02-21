@@ -1,6 +1,6 @@
-
 const Meeting = require('../models/meeting');
-const Github = require('../models/github');
+const Github = require('../helpers/github');
+const meetingUtil = require('../helpers/meeting');
 
 let getAll = (req, res, next) => {
     Meeting.find({}, (err, docs) => {
@@ -27,7 +27,22 @@ let get = (req, res, next) => {
     });
 }
 
-let insert = (req, res, next) => {
+let update = (req, res, next) => {
+    const query = req.body.query;
+    const data = req.body.data;
+    const options = { multi: true };
+    Meeting.update(query, data, options, (err, docEffected) => {
+        if (err) { return next(err); }
+        else {
+            res.send({
+                status: 200,
+                message: 'Meeting data updation successfull'
+            })
+        }
+    });
+}
+
+let populate = (req, res, next) => {
     Github.getContributers().then((result) => {
         const members = result.data;
         Github.getRepoIssues().then((result) => {
@@ -53,27 +68,11 @@ let insert = (req, res, next) => {
     }).catch((err) => {
         next(err);
     })
-
-}
-
-let update = (req, res, next) => {
-    const query = req.body.query;
-    const data = req.body.data;
-    const options = { multi: true };
-    Meeting.update(query, data, options, (err, docEffected) => {
-        if (err) { return next(err); }
-        else {
-            res.send({
-                status: 200,
-                message: 'Meeting data updation successfull'
-            })
-        }
-    });
 }
 
 module.exports = {
     getAll,
     get,
-    insert,
-    update
+    update,
+    populate
 }

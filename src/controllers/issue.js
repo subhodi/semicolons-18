@@ -1,4 +1,4 @@
-const Github = require('../models/github');
+const Github = require('../helpers/github');
 
 let getAll = (req, res, next) => {
     Github.getRepoIssues().then((issues) => {

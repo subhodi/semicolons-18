@@ -2,25 +2,23 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
-    member = {
-        firstName: String,
-        lastName: String,
-        email: String
-    },
-    issue = {
-        number: Number,
-        status: String,
-        url: String,
-        comment: String,
-        assignees: [String]
+    session = {
+        id: Number,
+        audioFileUrl: String,
+        rawTranscript: Object,
+        speakerId: [String],
+        keywords: [String],
+        transcript: Object
     },
     question = {
         statement: String,
-        answer: String
+        status: String,
+        answer: String,
     },
-    todo = {
+    actionItems = {
         action: String,
-        assignees: [String]
+        assignees: [String],
+        status: Boolean
     };
 
 const meetingSchema = new Schema({
@@ -28,8 +26,10 @@ const meetingSchema = new Schema({
     name: String,
     members: { type: Array, "default": [] },
     issues: { type: Array, "default": [] },
+    sessions: [{ session }],
     questions: [{ question }],
-    todos: [{ todo }],
+    actionItems: [{ actionItems }],
+    summary: String
 
 });
 

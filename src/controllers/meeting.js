@@ -15,7 +15,7 @@ let getAll = (req, res, next) => {
 }
 
 let get = (req, res, next) => {
-    const query = req.params.name;
+    const query = { name: req.params.name };
     Meeting.findOne(query, (err, docs) => {
         if (err) { return next(err); }
         else {
@@ -52,6 +52,7 @@ let populate = (req, res, next) => {
                 members: members,
                 issues: issues
             });
+            console.log("savinf meeyting");
             meeting.save((err) => {
                 if (err) { return next(err); }
                 else {
@@ -70,9 +71,25 @@ let populate = (req, res, next) => {
     })
 }
 
+let newSession = (req, res, next) => {
+    const audioSourcePath = req.body.audioSourcePath;
+    const rawTranscript = req.body.rawTranscript;
+    const speakerId = req.body.speakerId;
+    meetingUtil.addSession(audioSourcePath, rawTranscript, speakerId).then((sessionId) => {
+        res.send({
+            status: 200,
+            message: sessionId
+        })
+        // REST call for keyword detection here(sessionId,rawTranscript)
+    }).catch((err) => {
+        return next(err);
+    });
+}
+
 module.exports = {
     getAll,
     get,
     update,
-    populate
+    populate,
+    newSession
 }

@@ -47,7 +47,7 @@ let update = (req, res, next) => {
     const milestone = req.body.milestone;
     const labels = req.body.labels;
     const assignees = req.body.assignees;
-    Github.editIssue = (issueNumber, state, title, body, milestone, labels, assignees).then((issue) => {
+    Github.editIssue(issueNumber, state, title, body, milestone, labels, assignees).then((issue) => {
         res.send({
             status: 200,
             message: issue

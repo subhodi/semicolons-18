@@ -28,18 +28,20 @@ let createIssue = (title, body, milestone, labels, assignees) => octokit.issues.
     assignees: assignees
 });
 
-let editIssue = (issueNumber, state, title, body, milestone, labels, assignees) => octokit.issues.edit({
-    owner: owner,
-    repo: repo,
-    number: issueNumber,
-    title: title,
-    state: state,
-    body: body,
-    milestone: milestone,
-    labels: labels,
-    assignees: assignees
-});
-
+let editIssue = (issueNumber, state, title, body, milestone, labels, assignees) => {
+    let options = {
+        owner: owner,
+        repo: repo,
+    };
+    Object.assign(options,
+        issueNumber && { number: issueNumber, },
+        title && { title: title, },
+        body && { body: body, },
+        milestone && { milestone: milestone, },
+        labels && { labels: labels, },
+        assignees && { assignees: assignees });
+    return octokit.issues.edit(options);
+}
 module.exports = {
     getContributers,
     getRepoIssues,

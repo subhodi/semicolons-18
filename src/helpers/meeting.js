@@ -3,31 +3,33 @@ const Github = require('./github');
 
 // "storage.drive.com", "Welcome to meet-asisst", ['1', '2', '3']
 let addSession = (audioSourcePath, rawTranscript, speakerId) => {
-    const query = { name: process.env.REPO };
-    const data = {
-        '$push':
-            {
-                'sessions':
-                    {
-                        'audioFileUrl': audioSourcePath,
-                        'rawTranscript': rawTranscript,
-                        'speakerId': speakerId,
-                    }
-            }
-    };
-    const options = { multi: false };
-    Meeting.update(query, data, options, (err, docEffected) => {
-        if (err) {
-            console.log(err);
-        } else {
-            Meeting.findOne(query, (err, docs) => {
-                if (err) { console.log(err); }
-                else {
-                    return docs.sessions[docs.sessions.length - 1]._id;
+    return new Promise((resolve,reject)=>{
+        const query = { name: process.env.REPO };
+        const data = {
+            '$push':
+                {
+                    'sessions':
+                        {
+                            'audioFileUrl': audioSourcePath,
+                            'rawTranscript': rawTranscript,
+                            'speakerId': speakerId,
+                        }
                 }
-            });
-        }
-
+        };
+        const options = { multi: false };
+        Meeting.update(query, data, options, (err, docEffected) => {
+            if (err) {
+                reject(err);
+            } else {
+                Meeting.findOne(query, (err, docs) => {
+                    if (err) { reject(err); }
+                    else {
+                        resolve(docs.sessions[docs.sessions.length - 1]._id);
+                    }
+                });
+            }
+    
+        });
     });
 }
 

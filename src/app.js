@@ -48,7 +48,7 @@ middleWare = () => {
 }
 
 mountRoutes = () => {
-
+  // UI-APIs
   router.get('/meeting', meetingControlller.getAll);
   router.get('/meeting/:name', meetingControlller.get);
   router.post('/meeting/populate', meetingControlller.populate);
@@ -58,6 +58,10 @@ mountRoutes = () => {
   router.get('/issue/:number', issueController.get);
   router.post('/issue', issueController.insert);
   router.put('/issue', issueController.update);
+
+  // MICRO-APIs
+  router.post('/meeting/session', meetingControlller.newSession);
+  
 
   app.use('/api', router);
 }

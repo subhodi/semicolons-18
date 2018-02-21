@@ -26,9 +26,9 @@ const meetingSchema = new Schema({
     name: String,
     members: { type: Array, "default": [] },
     issues: { type: Array, "default": [] },
-    sessions: [{ session }],
-    questions: [{ question }],
-    actionItems: [{ actionItems }],
+    sessions: [session],
+    questions: [question],
+    actionItems: [actionItems],
     summary: String
 
 });

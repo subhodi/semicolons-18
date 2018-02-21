@@ -18,6 +18,7 @@ const userControlller = require('./controllers/user');
 const meetingControlller = require('./controllers/meeting');
 const textController = require('./controllers/text');
 const issueController = require('./controllers/issue');
+const textProcessController = require('./controllers/textprocess');
 
 // Connect to MongoDB
 const mongoUrl = process.env.MONGODB_URI;

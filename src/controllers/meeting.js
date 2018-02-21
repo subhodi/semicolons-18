@@ -16,7 +16,7 @@ let getAll = (req, res, next) => {
 
 let get = (req, res, next) => {
     const query = req.params.name;
-    Meeting.find(query, (err, docs) => {
+    Meeting.findOne(query, (err, docs) => {
         if (err) { return next(err); }
         else {
             res.send({

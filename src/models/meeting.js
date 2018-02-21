@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     session = {
-        id: Number,
         audioFileUrl: String,
         rawTranscript: Object,
         speakerId: [String],
@@ -18,7 +17,7 @@ const Schema = mongoose.Schema,
     actionItems = {
         action: String,
         assignees: [String],
-        status: Boolean
+        status: String
     };
 
 const meetingSchema = new Schema({

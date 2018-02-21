@@ -24,7 +24,8 @@ const issueController = require('./controllers/issue');
 const mongoUrl = process.env.MONGODB_URI;
 mongoose.connect(mongoUrl).then(() => {
   console.log('MongoDB connection established ' + mongoUrl);
-  console.log(require('./helpers/meeting').addSession("storage.google.com", "Hi there", ['1', '2', '3']));
+  // console.log(require('./helpers/meeting').addSession("storage.drive.com", "Welcome to meet-asisst", ['1', '2', '3']));
+  // require('./helpers/meeting').addKeywordsTosession('5a8d89b2f5aa1171cc7eb69d', ['issue', 1]);
 
 }).catch(err => {
   console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);

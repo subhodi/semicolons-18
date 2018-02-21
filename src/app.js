@@ -5,9 +5,6 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-
-
-
 let app = express();
 let router = express.Router();
 
@@ -16,16 +13,15 @@ dotenv.config({ path: '.env' });
 
 const meetingControlller = require('./controllers/meeting');
 const issueController = require('./controllers/issue');
-
-// const textProcessController = require('./controllers/textprocess');
 // const textController = require('./controllers/text');
 
 // Connect to MongoDB
 const mongoUrl = process.env.MONGODB_URI;
 mongoose.connect(mongoUrl).then(() => {
   console.log('MongoDB connection established ' + mongoUrl);
-  // console.log(require('./helpers/meeting').addSession("storage.drive.com", "Welcome to meet-asisst", ['1', '2', '3']));
+  // console.log(require('./helpers/meeting').addSession('storage.drive.com', 'Welcome to meet-asisst', ['1', '2', '3']));
   // require('./helpers/meeting').addKeywordsTosession('5a8d89b2f5aa1171cc7eb69d', ['issue', 1]);
+  // require('./helpers/meeting').addTranscriptTosession('5a8d89b2f5aa1171cc7eb69d', 'Welcome to meet-assist !');
 
 }).catch(err => {
   console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);

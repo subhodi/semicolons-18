@@ -109,8 +109,6 @@ let addActionItem = (action, assignees) => {
     });
 }
 
-
-
 let addSummary = (summary) => {
     const query = { name: process.env.REPO };
     const data = {

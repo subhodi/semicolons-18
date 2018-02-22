@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+autoIncrement = require('mongoose-auto-increment');
 
 const Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
@@ -29,7 +30,7 @@ const meetingSchema = new Schema({
     questions: [question],
     actionItems: [actionItems],
     summary: String
-// userSummary: [{name:"xya", summary:[]}]
+    // userSummary: [{name:"xya", summary:[]}]
 });
 
 meetingSchema.pre('save', function (next) {
@@ -38,3 +39,29 @@ meetingSchema.pre('save', function (next) {
 
 const Meeting = mongoose.model('Meeting', meetingSchema);
 module.exports = Meeting;
+
+var connection = mongoose.createConnection("mongodb://localhost/meet-assist");
+
+autoIncrement.initialize(connection);
+
+var bookSchema = new Schema({
+    author: { type: Schema.Types.ObjectId, ref: 'Author' },
+    title: String,
+    genre: String,
+    publishDate: String
+});
+
+bookSchema.plugin(autoIncrement.plugin, 'Book');
+var Book = connection.model('Book', bookSchema);
+const book = new Book({
+    title: 'LOT',
+    genre: 'axyadfsz',
+    publishDate: '2018'
+});
+book.save((err) => {
+    if (err) { console.log('error inserting'); }
+    else {
+        console.log('Insertyion success');
+    }
+    })
+    

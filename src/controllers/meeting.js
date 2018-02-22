@@ -52,7 +52,6 @@ let populate = (req, res, next) => {
                 members: members,
                 issues: issues
             });
-            console.log("savinf meeyting");
             meeting.save((err) => {
                 if (err) { return next(err); }
                 else {

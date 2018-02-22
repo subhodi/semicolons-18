@@ -187,3 +187,26 @@ module.exports = {
     addSummary,
     sessionPipeline
 }
+
+// sample APIs
+// Meeting.
+//     aggregate([{ $match: { name: 'meet-assist' } }]).
+//     unwind('actionItems').match({ 'actionItems.assignees': { $in: ['sid226'] } }).
+//     exec((err, result) => {
+//         console.log(err, result);
+//     });
+
+// Meeting.
+//     aggregate([{ $match: { name: 'meet-assist' } }]).
+//     unwind('issues').match({ 'issues.assignees.login': { $in: ['YajneshRai'] } }).
+//     exec((err, result) => {
+//         console.log(err, result);
+//     });
+
+// Meeting.update({ name: 'meet-assist', 'actionItems.action': 'pending' }, {
+//     "$set": {
+//         "actionItems.$.status": 'completed'
+//     }
+// }, { multi: true }, (err, docEffected) => {
+//     console.log(err, docEffected);
+// });

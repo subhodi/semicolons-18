@@ -22,9 +22,7 @@ mongoose.connect(mongoUrl).then(() => {
   // console.log(require('./helpers/meeting').addSession('storage.drive.com', 'Welcome to meet-asisst', ['1', '2', '3']));
   // require('./helpers/meeting').addKeywordsTosession('5a8d89b2f5aa1171cc7eb69d', ['issue', 1]);
   // require('./helpers/meeting').addTranscriptTosession('5a8d89b2f5aa1171cc7eb69d', 'Welcome to meet-assist !');
-  // require('./helpers/meeting').addActionItem('New action 2', ['sid226']);
-
-
+  // require('./helpers/meeting').addActionItem('New action 1', ['subhodi']);
 }).catch(err => {
   console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
 });

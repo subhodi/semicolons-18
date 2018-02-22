@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node index.js",
     "build": "tsc",
     "test": "jest --forceExit --coverage --verbose"
   },
@@ -17,6 +17,7 @@
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify-es": "^3.3.0",
     "jest": "^22.3.0",
+    "nodemon": "^1.15.1",
     "supertest": "^3.0.0"
   },
   "dependencies": {

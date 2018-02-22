@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-autoIncrement = require('mongoose-auto-increment');
-
 const Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
     session = {
@@ -29,8 +27,15 @@ const meetingSchema = new Schema({
     sessions: [session],
     questions: [question],
     actionItems: [actionItems],
-    summary: String
+    summary: String,
+    projectName: String
     // userSummary: [{name:"xya", summary:[]}]
+});
+
+const sentenceSchema = new Schema({
+    id: ObjectId,
+    meetingId: { type: ObjectId, ref: 'Meeting' },
+    sentence: Object
 });
 
 meetingSchema.pre('save', function (next) {
@@ -38,30 +43,21 @@ meetingSchema.pre('save', function (next) {
 });
 
 const Meeting = mongoose.model('Meeting', meetingSchema);
+const Sentence = mongoose.model('Sentence', sentenceSchema);
+
 module.exports = Meeting;
 
-var connection = mongoose.createConnection("mongodb://localhost/meet-assist");
-
-autoIncrement.initialize(connection);
-
-var bookSchema = new Schema({
-    author: { type: Schema.Types.ObjectId, ref: 'Author' },
-    title: String,
-    genre: String,
-    publishDate: String
-});
-
-bookSchema.plugin(autoIncrement.plugin, 'Book');
-var Book = connection.model('Book', bookSchema);
-const book = new Book({
-    title: 'LOT',
-    genre: 'axyadfsz',
-    publishDate: '2018'
-});
-book.save((err) => {
-    if (err) { console.log('error inserting'); }
-    else {
-        console.log('Insertyion success');
-    }
+Meeting.findOne({ name: 'meet-assist' }, '_id', (err, doc) => {
+    let sentence = new Sentence({
+        meetingId: doc._id,
+        sentence: {
+            from: 'kevin',
+            to: 'Sagar',
+            sentence: 'What is the update on oath login?',
+            tags: ['issue-24'],
+        }
+    });
+    sentence.save((err) => {
+        console.log(err);
     })
-    
+})

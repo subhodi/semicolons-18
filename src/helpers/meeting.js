@@ -1,5 +1,45 @@
 const Meeting = require('../models/meeting');
 const Github = require('./github');
+const request = require('request');
+
+let restAPI = (url, data) => {
+    return new Promise((resolve, reject) => {
+        request({
+            url: url,
+            method: "POST",
+            json: true,
+            body: data
+        }, function (error, response, body) {
+            error
+                ? reject(error)
+                : resolve(body);
+        });
+    });
+}
+
+let sessionPipeline = ((audioSourcePath, rawTranscript, speakerId) => {
+    return new Promise((resolve, reject) => {
+        addSession(audioSourcePath, rawTranscript, speakerId).then((sessionId) => {
+            restAPI("http://reqres.in/api/create", {
+                name: "paul rudd",
+                movies: ["I Love You Man", "Role Models"]
+            }).then((response) => {
+                addTranscriptTosession(sessionId, rawTranscript).then((docEffected) => {
+                    restAPI("http://reqres.in/api/create", {
+                        name: "paul rudd",
+                        movies: ["I Love You Man", "Role Models"]
+                    });
+                }).catch((err) => {
+                    reject(err);
+                });
+            }).catch((error) => {
+                reject(err);
+            });
+        }).catch((err) => {
+            reject(err);
+        })
+    });
+});
 
 // "storage.drive.com", "Welcome to meet-asisst", ['1', '2', '3']
 let addSession = (audioSourcePath, rawTranscript, speakerId) => {
@@ -34,99 +74,107 @@ let addSession = (audioSourcePath, rawTranscript, speakerId) => {
 }
 
 let addKeywordsTosession = (sessionId, keywords) => {
-    const query = { name: process.env.REPO, 'sessions._id': sessionId };
-    const data = {
-        '$set': {
-            'sessions.$.keywords': keywords
-        }
-    };
-    const options = { multi: false };
-    Meeting.update(query, data, options, (err, docEffected) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(docEffected);
-        }
+    return new Promise((resolve, reject) => {
+        const query = { name: process.env.REPO, 'sessions._id': sessionId };
+        const data = {
+            '$set': {
+                'sessions.$.keywords': keywords
+            }
+        };
+        const options = { multi: false };
+        Meeting.update(query, data, options, (err, docEffected) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(docEffected);
+            }
 
+        });
     });
 }
 
 let addTranscriptTosession = (sessionId, transcript) => {
-    const query = { name: process.env.REPO, 'sessions._id': sessionId };
-    const data = {
-        '$set': {
-            'sessions.$.transcript': transcript
-        }
-    };
-    const options = { multi: false };
-    Meeting.update(query, data, options, (err, docEffected) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(docEffected);
-        }
+    return new Promise((resolve, reject) => {
+        const query = { name: process.env.REPO, 'sessions._id': sessionId };
+        const data = {
+            '$set': {
+                'sessions.$.transcript': transcript
+            }
+        };
+        const options = { multi: false };
+        Meeting.update(query, data, options, (err, docEffected) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(docEffected);
+            }
 
+        });
     });
 }
 
 let addQuestion = (statement, status, answer) => {
-    const query = { name: process.env.REPO };
-    const data = {
-        'questions':
-            {
-                statement: statement,
-                status: status,
-                answer: answer,
+    return new Promise((resolve, reject) => {
+        const query = { name: process.env.REPO };
+        const data = {
+            'questions':
+                {
+                    statement: statement,
+                    status: status,
+                    answer: answer,
+                }
+        };
+        const options = { multi: false };
+        Meeting.update(query, data, options, (err, docEffected) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(docEffected);
             }
-    };
-    const options = { multi: false };
-    Meeting.update(query, data, options, (err, docEffected) => {
-        if (err) {
-            return { status: 'false', message: err };
-        } else {
-            return { status: 'true', message: docEffected };
-        }
 
+        });
     });
 }
 
 let addActionItem = (action, assignees) => {
-    const query = { name: process.env.REPO };
-    const data = {
-        '$push':
-            {
-                'actionItems':
-                    {
-                        action: action,
-                        assignees: assignees,
-                        status: 'pending'
-                    }
+    return new Promise((resolve, reject) => {
+        const query = { name: process.env.REPO };
+        const data = {
+            '$push':
+                {
+                    'actionItems':
+                        {
+                            action: action,
+                            assignees: assignees,
+                            status: 'pending'
+                        }
+                }
+        };
+        const options = { multi: false };
+        Meeting.update(query, data, options, (err, docEffected) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(docEffected);
             }
-    };
-    const options = { multi: false };
-    Meeting.update(query, data, options, (err, docEffected) => {
-        if (err) {
-            return { status: 'false', message: err };
-        } else {
-            return { status: 'true', message: docEffected };
-        }
-
+        });
     });
 }
 
 let addSummary = (summary) => {
-    const query = { name: process.env.REPO };
-    const data = {
-        'summary': summary
-    };
-    const options = { multi: false };
-    Meeting.update(query, data, options, (err, docEffected) => {
-        if (err) {
-            return { status: 'false', message: err };
-        } else {
-            return { status: 'true', message: docEffected };
-        }
-
+    return new Promise((resolve, reject) => {
+        const query = { name: process.env.REPO };
+        const data = {
+            'summary': summary
+        };
+        const options = { multi: false };
+        Meeting.update(query, data, options, (err, docEffected) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(docEffected);
+            }
+        });
     });
 }
 
@@ -136,5 +184,6 @@ module.exports = {
     addTranscriptTosession,
     addQuestion,
     addActionItem,
-    addSummary
+    addSummary,
+    sessionPipeline
 }

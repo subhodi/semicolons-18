@@ -29,7 +29,7 @@ const meetingSchema = new Schema({
     questions: [question],
     actionItems: [actionItems],
     summary: String
-
+// userSummary: [{name:"xya", summary:[]}]
 });
 
 meetingSchema.pre('save', function (next) {

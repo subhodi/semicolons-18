@@ -22,6 +22,8 @@ mongoose.connect(mongoUrl).then(() => {
   // console.log(require('./helpers/meeting').addSession('storage.drive.com', 'Welcome to meet-asisst', ['1', '2', '3']));
   // require('./helpers/meeting').addKeywordsTosession('5a8d89b2f5aa1171cc7eb69d', ['issue', 1]);
   // require('./helpers/meeting').addTranscriptTosession('5a8d89b2f5aa1171cc7eb69d', 'Welcome to meet-assist !');
+  // require('./helpers/meeting').addActionItem('New action 2', ['sid226']);
+
 
 }).catch(err => {
   console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
@@ -53,6 +55,7 @@ mountRoutes = () => {
   router.get('/meeting/:name', meetingControlller.get);
   router.post('/meeting/populate', meetingControlller.populate);
   router.put('/meeting', meetingControlller.update);
+  router.get('/meeting/:name/actionitem/:username', meetingControlller.getActionItemForUser);
 
   router.get('/issue', issueController.getAll);
   router.get('/issue/:number', issueController.get);
@@ -61,7 +64,7 @@ mountRoutes = () => {
 
   // MICRO-APIs
   router.post('/meeting/session', meetingControlller.newSession);
-  
+
 
   app.use('/api', router);
 }

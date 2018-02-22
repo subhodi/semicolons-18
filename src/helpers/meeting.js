@@ -3,7 +3,7 @@ const Github = require('./github');
 
 // "storage.drive.com", "Welcome to meet-asisst", ['1', '2', '3']
 let addSession = (audioSourcePath, rawTranscript, speakerId) => {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
         const query = { name: process.env.REPO };
         const data = {
             '$push':
@@ -28,7 +28,7 @@ let addSession = (audioSourcePath, rawTranscript, speakerId) => {
                     }
                 });
             }
-    
+
         });
     });
 }
@@ -93,11 +93,14 @@ let addQuestion = (statement, status, answer) => {
 let addActionItem = (action, assignees) => {
     const query = { name: process.env.REPO };
     const data = {
-        'actionItems':
+        '$push':
             {
-                action: action,
-                assignees: assignees,
-                status: 'pending'
+                'actionItems':
+                    {
+                        action: action,
+                        assignees: assignees,
+                        status: 'pending'
+                    }
             }
     };
     const options = { multi: false };

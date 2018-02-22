@@ -86,10 +86,30 @@ let newSession = (req, res, next) => {
     });
 }
 
+let getActionItemForUser = (req, res, next) => {
+    const query = { 'name': req.params.name, 'actionItems': { $elemMatch: { 'status': req.params.username } } };
+    Meeting.findOne(query, 'actionItems', (err, docs) => {
+        if (err) { return next(err); }
+        else {
+            let newDocs = docs.actionItems.reduce((filtered, doc) => {
+                if (doc.assignees.indexOf('subhodi') > -1) {
+                    filtered.push(doc);
+                }
+                return filtered;
+            }, []);
+            res.send({
+                status: 200,
+                message: newDocs
+            })
+        }
+    });
+}
+
 module.exports = {
     getAll,
     get,
     update,
     populate,
-    newSession
+    newSession,
+    getActionItemForUser
 }

@@ -1,8 +1,9 @@
 const Meeting = require('../models/meeting');
+const Sentence = require('../models/sentence');
 const Github = require('./github');
 const request = require('request');
 
-let restAPI = (url, data) => {
+let pythonService = (url, data) => {
     return new Promise((resolve, reject) => {
         request({
             url: url,
@@ -20,31 +21,29 @@ let restAPI = (url, data) => {
 let sessionPipeline = ((audioSourcePath, rawTranscript, speakerId) => {
     return new Promise((resolve, reject) => {
         addSession(audioSourcePath, rawTranscript, speakerId).then((sessionId) => {
-            restAPI("http://reqres.in/api/create", {
+            return pythonService("http://reqres.in/api/create", {
                 name: "paul rudd",
                 movies: ["I Love You Man", "Role Models"]
-            }).then((response) => {
-                addTranscriptTosession(sessionId, rawTranscript).then((docEffected) => {
-                    restAPI("http://reqres.in/api/create", {
-                        name: "paul rudd",
-                        movies: ["I Love You Man", "Role Models"]
-                    });
-                }).catch((err) => {
-                    reject(err);
-                });
-            }).catch((error) => {
-                reject(err);
             });
+        }).then((response) => {
+            return addTranscriptTosession(sessionId, rawTranscript);
+        }).then((docEffected) => {
+            return pythonService("http://reqres.in/api/create", {
+                name: "paul rudd",
+                movies: ["I Love You Man", "Role Models"]
+            });
+        }).then((response) => {
+            // 
         }).catch((err) => {
-            reject(err);
-        })
-    });
+
+        });
+    })
 });
 
 // "storage.drive.com", "Welcome to meet-asisst", ['1', '2', '3']
-let addSession = (audioSourcePath, rawTranscript, speakerId) => {
+let addSession = (meetingName, audioSourcePath, rawTranscript, speakerId) => {
     return new Promise((resolve, reject) => {
-        const query = { name: process.env.REPO };
+        const query = { projectName: process.env.REPO, name: meetingName };
         const data = {
             '$push':
                 {
@@ -73,9 +72,9 @@ let addSession = (audioSourcePath, rawTranscript, speakerId) => {
     });
 }
 
-let addKeywordsTosession = (sessionId, keywords) => {
+let addKeywordsTosession = (meetingName, sessionId, keywords) => {
     return new Promise((resolve, reject) => {
-        const query = { name: process.env.REPO, 'sessions._id': sessionId };
+        const query = { projectName: process.env.REPO, name: meetingName, 'sessions._id': sessionId };
         const data = {
             '$set': {
                 'sessions.$.keywords': keywords
@@ -93,9 +92,9 @@ let addKeywordsTosession = (sessionId, keywords) => {
     });
 }
 
-let addTranscriptTosession = (sessionId, transcript) => {
+let addTranscriptTosession = (meetingName, sessionId, transcript) => {
     return new Promise((resolve, reject) => {
-        const query = { name: process.env.REPO, 'sessions._id': sessionId };
+        const query = { projectName: process.env.REPO, name: meetingName, 'sessions._id': sessionId };
         const data = {
             '$set': {
                 'sessions.$.transcript': transcript
@@ -113,9 +112,9 @@ let addTranscriptTosession = (sessionId, transcript) => {
     });
 }
 
-let addQuestion = (statement, status, answer) => {
+let addQuestion = (meetingName, statement, status, answer) => {
     return new Promise((resolve, reject) => {
-        const query = { name: process.env.REPO };
+        const query = { projectName: process.env.REPO, name: meetingName };
         const data = {
             'questions':
                 {
@@ -136,9 +135,9 @@ let addQuestion = (statement, status, answer) => {
     });
 }
 
-let addActionItem = (action, assignees) => {
+let addActionItem = (meetingName, action, assignees) => {
     return new Promise((resolve, reject) => {
-        const query = { name: process.env.REPO };
+        const query = { projectName: process.env.REPO, name: meetingName };
         const data = {
             '$push':
                 {
@@ -161,9 +160,9 @@ let addActionItem = (action, assignees) => {
     });
 }
 
-let addSummary = (summary) => {
+let addSummary = (meetingName, summary) => {
     return new Promise((resolve, reject) => {
-        const query = { name: process.env.REPO };
+        const query = { projectName: process.env.REPO, name: meetingName };
         const data = {
             'summary': summary
         };
@@ -187,26 +186,3 @@ module.exports = {
     addSummary,
     sessionPipeline
 }
-
-// sample APIs
-// Meeting.
-//     aggregate([{ $match: { name: 'meet-assist' } }]).
-//     unwind('actionItems').match({ 'actionItems.assignees': { $in: ['sid226'] } }).
-//     exec((err, result) => {
-//         console.log(err, result);
-//     });
-
-// Meeting.
-//     aggregate([{ $match: { name: 'meet-assist' } }]).
-//     unwind('issues').match({ 'issues.assignees.login': { $in: ['YajneshRai'] } }).
-//     exec((err, result) => {
-//         console.log(err, result);
-//     });
-
-// Meeting.update({ name: 'meet-assist', 'actionItems.action': 'pending' }, {
-//     "$set": {
-//         "actionItems.$.status": 'completed'
-//     }
-// }, { multi: true }, (err, docEffected) => {
-//     console.log(err, docEffected);
-// });

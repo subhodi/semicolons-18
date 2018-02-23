@@ -13,16 +13,17 @@ dotenv.config({ path: '.env' });
 
 const meetingControlller = require('./controllers/meeting');
 const issueController = require('./controllers/issue');
+const projectController = require('./controllers/project');
 // const textController = require('./controllers/text');
 
 // Connect to MongoDB
 const mongoUrl = process.env.MONGODB_URI;
 mongoose.connect(mongoUrl).then(() => {
   console.log('MongoDB connection established ' + mongoUrl);
-  // console.log(require('./helpers/meeting').addSession('storage.drive.com', 'Welcome to meet-asisst', ['1', '2', '3']));
-  // require('./helpers/meeting').addKeywordsTosession('5a8d89b2f5aa1171cc7eb69d', ['issue', 1]);
-  // require('./helpers/meeting').addTranscriptTosession('5a8d89b2f5aa1171cc7eb69d', 'Welcome to meet-assist !');
-  // require('./helpers/meeting').addActionItem('New action 1', ['subhodi']);
+  // console.log(require('./helpers/meeting').addSession('day1', 'storage.drive.com', 'Welcome to meet-asisst', ['1', '2', '3']));
+  // require('./helpers/meeting').addKeywordsTosession('day1', '5a8fafd73c31758908d65873', ['issue', 1]);
+  // require('./helpers/meeting').addTranscriptTosession('day1','5a8d89b2f5aa1171cc7eb69d', 'Welcome to meet-assist !');
+  // require('./helpers/meeting').addActionItem('day1','New action 1', ['subhodi']);
 }).catch(err => {
   console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
 });
@@ -49,6 +50,9 @@ middleWare = () => {
 
 mountRoutes = () => {
   // UI-APIs
+  router.get('/project', projectController.getAll);
+  router.get('/project/:name', projectController.get);
+
   router.get('/meeting', meetingControlller.getAll);
   router.get('/meeting/:name', meetingControlller.get);
   router.post('/meeting/populate', meetingControlller.populate);

@@ -2,7 +2,7 @@ version: '2'
 services:
   mongodb:
       image: mongo:latest
-      container_name: "mongodb"
+      container_name: "db_meet_assist"
       environment:
         - MONGO_DATA_DIR=/data/db
         - MONGO_LOG_DIR=/dev/null
@@ -12,13 +12,15 @@ services:
         - 27017:27017
       command: mongod --smallfiles --logpath=/dev/null
 
-  kyc-server:
+  server:
     build: .
     volumes:
       - .:/app
     depends_on:
       - mongodb
     image: boomerang/node-server-meet-assist:latest
+    container_name: "server_meet_assist"
+    restart: always 
     ports:
       - "3000:3000"
     network_mode: "host"

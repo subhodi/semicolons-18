@@ -15,6 +15,7 @@ const meetingControlller = require('./controllers/meeting');
 const issueController = require('./controllers/issue');
 const projectController = require('./controllers/project');
 const queryController = require('./controllers/query');
+const sentenceController = require('./controllers/sentence');
 
 // Connect to MongoDB
 const mongoUrl = process.env.MONGODB_URI;
@@ -67,9 +68,8 @@ mountRoutes = () => {
   router.post('/issue', issueController.insert);
   router.put('/issue', issueController.update);
 
-  // MICRO-APIs
-  router.post('/meeting/session', meetingControlller.newSession);
-
+  router.get('/sentence', sentenceController.getAll);
+  router.get('/sentence/:name', sentenceController.get);
 
   app.use('/api', router);
 }

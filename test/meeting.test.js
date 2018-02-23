@@ -10,7 +10,7 @@ describe("GET /", () => {
 
 describe("POST /meeting/populate", () => {
   it("should populate DB with meeting details", (done) => {
-    request(app).post("/api/meeting/session")
+    request(app).post("/api/meeting/populate")
       .send({
         "name": "day1"
       })
@@ -19,21 +19,8 @@ describe("POST /meeting/populate", () => {
 });
 
 
-// describe("POST /newSession", () => {
-//   it("should create new session", (done) => {
-//     request(app).post("/api/meeting/session")
-//       .send({
-//         "name": "day1",
-//         "audioSourcePath": "https://storage.google.co.in/",
-//         "rawTranscript": "I am working on issues",
-//         "speakerId": ["1", "2", "3"]
-//       })
-//       .expect(200, done);
-//   });
-// });
-
 describe("GET /meeting/name", () => {
-  it("should specified meeting details", (done) => {
+  it("should return specified meeting details", (done) => {
     request(app).get("/api/meeting/day1")
       .expect(200, done);
   });

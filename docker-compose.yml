@@ -2,12 +2,12 @@ version: '2'
 services:
   mongodb:
       image: mongo:latest
-      container_name: "db_meet_assist"
+      container_name: "db.meet.assist"
       environment:
         - MONGO_DATA_DIR=/data/db
         - MONGO_LOG_DIR=/dev/null
       volumes:
-        - ./databse/db:/data/db
+        - ../datadir/db:/data/db
       ports:
         - 27017:27017
       command: mongod --smallfiles --logpath=/dev/null
@@ -19,7 +19,7 @@ services:
     depends_on:
       - mongodb
     image: boomerang/node-server-meet-assist:latest
-    container_name: "server_meet_assist"
+    container_name: "server.meet.assist"
     restart: always 
     ports:
       - "3000:3000"

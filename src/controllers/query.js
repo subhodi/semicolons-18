@@ -1,6 +1,6 @@
 const Meeting = require('../models/meeting');
 
-let getActionItemForUser = (req, res, next) => {
+let getActionItemsForUser = (req, res, next) => {
     //     const query = { 'projectName': process.env.REPO, 'name': req.params.name, 'actionItems': { $elemMatch: { 'status': req.params.status } } };
     const query = { 'projectName': process.env.REPO, 'name': req.params.name };
     Meeting.findOne(query, 'actionItems', (err, docs) => {
@@ -23,8 +23,26 @@ let getActionItemForUser = (req, res, next) => {
     });
 }
 
+let getIssuesForUser = (req, res, next) => {
+    const name = req.params.name;
+    const username = req.params.username;
+    Meeting.aggregate([{ $match: { projectName: process.env.REPO, name: name } }]).
+        unwind('issues').match({ 'issues.assignees.login': { $in: [username] } }).
+        exec((err, result) => {
+            if (err) {
+                return next(err);
+            } else {
+                res.send({
+                    status: 200,
+                    message: result
+                })
+            }
+        });
+}
+
 module.exports = {
-    getActionItemForUser
+    getActionItemsForUser,
+    getIssuesForUser
 }
 
 

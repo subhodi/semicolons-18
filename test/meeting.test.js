@@ -19,18 +19,18 @@ describe("POST /meeting/populate", () => {
 });
 
 
-describe("POST /newSession", () => {
-  it("should create new session", (done) => {
-    request(app).post("/api/meeting/session")
-      .send({
-        "name": "day1",
-        "audioSourcePath": "https://storage.google.co.in/",
-        "rawTranscript": "I am working on issues",
-        "speakerId": ["1", "2", "3"]
-      })
-      .expect(200, done);
-  });
-});
+// describe("POST /newSession", () => {
+//   it("should create new session", (done) => {
+//     request(app).post("/api/meeting/session")
+//       .send({
+//         "name": "day1",
+//         "audioSourcePath": "https://storage.google.co.in/",
+//         "rawTranscript": "I am working on issues",
+//         "speakerId": ["1", "2", "3"]
+//       })
+//       .expect(200, done);
+//   });
+// });
 
 describe("GET /meeting/name", () => {
   it("should specified meeting details", (done) => {

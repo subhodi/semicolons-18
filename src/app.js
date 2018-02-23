@@ -45,9 +45,6 @@ middleWare = () => {
   app.use(compression());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use((err, req, res, next) => {
-    res.status(500).send(err.toString());
-  })
 }
 
 mountRoutes = () => {
@@ -72,6 +69,10 @@ mountRoutes = () => {
   router.get('/sentence/:name', sentenceController.get);
 
   app.use('/api', router);
+  app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).send(err.toString());
+  });
 }
 
 middleWare();

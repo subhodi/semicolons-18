@@ -3,7 +3,7 @@ const Sentence = require('../models/sentence');
 const Github = require('./github');
 const request = require('request');
 
-let pythonService = (url, data) => {
+let textProcessService = (url, data) => {
     return new Promise((resolve, reject) => {
         request({
             url: url,
@@ -18,17 +18,17 @@ let pythonService = (url, data) => {
     });
 }
 
-let sessionPipeline = ((audioSourcePath, rawTranscript, speakerId) => {
+let sessionPipeline = ((audioSourcePath, rawTranscript, speakerId, isCalltextProcessService) => {
     return new Promise((resolve, reject) => {
         addSession(audioSourcePath, rawTranscript, speakerId).then((sessionId) => {
-            return pythonService("http://reqres.in/api/create", {
+            return textProcessService("http://reqres.in/api/create", {
                 name: "paul rudd",
                 movies: ["I Love You Man", "Role Models"]
             });
         }).then((response) => {
             return addTranscriptTosession(sessionId, rawTranscript);
         }).then((docEffected) => {
-            return pythonService("http://reqres.in/api/create", {
+            return textProcessService("http://reqres.in/api/create", {
                 name: "paul rudd",
                 movies: ["I Love You Man", "Role Models"]
             });

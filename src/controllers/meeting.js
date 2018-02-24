@@ -3,6 +3,7 @@ const request = require('request');
 const Meeting = require('../models/meeting');
 const Github = require('../helpers/github');
 const meetingUtil = require('../helpers/meeting');
+const meetingService = require('../dataservice/meeting');
 
 let getAll = (req, res, next) => {
     Meeting.find({}, (err, docs) => {
@@ -72,9 +73,22 @@ let summary = (req, res, next) => {
     });
 }
 
+let remove = (req, res, next) => {
+    const meetingName = req.params.name;
+    meetingService.remove(meetingName).then(response => {
+        res.send({
+            status: 200,
+            message: response
+        })
+    }).catch(err => {
+        return next(err);
+    });
+};
+
 module.exports = {
     getAll,
     get,
     populate,
-    summary
+    summary,
+    remove
 }

@@ -56,6 +56,8 @@ mountRoutes = () => {
   router.get('/meeting/:name', meetingControlller.get);
   router.post('/meeting/populate', meetingControlller.populate);
   router.put('/meeting/summary', meetingControlller.summary);
+  router.delete('/meeting/:name', meetingControlller.remove);
+
 
   router.get('/meeting/:name/actionitems/:username', queryController.getActionItemsForUser);
   router.get('/meeting/:name/issues/:username', queryController.getIssuesForUser);

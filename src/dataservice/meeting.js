@@ -75,12 +75,26 @@ let insertNlpResponse = (meetingName, nlpResponse) => {
     });
 }
 
+let remove = (meetingName) => {
+    return new Promise((resolve, reject) => {
+        const query = { projectName: process.env.REPO, name: meetingName };
+        Meeting.remove(query, (err, docEffected) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(docEffected);
+            }
+        });
+    });
+}
+
 module.exports = {
     get,
     getAll,
     insertDialog,
     insertSummary,
-    insertNlpResponse
+    insertNlpResponse,
+    remove
 }
 
 {

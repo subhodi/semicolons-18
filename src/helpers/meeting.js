@@ -1,7 +1,17 @@
 const Meeting = require('../models/meeting');
-const Sentence = require('../models/sentence');
-const Github = require('./github');
-const request = require('request');
+const meetingService = require('../dataservice/meeting');
+
+let generateDialog = (rawTranscript, speakerId) => {
+    return new promise((resolve, reject) => {
+        // generate python
+        let dialog = [{
+            person: 'name',
+            statement: 'satement',
+            timestamp: 'timestamp'
+        }];
+        resolve(dialog);
+    });
+}
 
 let textProcessService = (url, data) => {
     return new Promise((resolve, reject) => {
@@ -18,171 +28,42 @@ let textProcessService = (url, data) => {
     });
 }
 
-let sessionPipeline = ((audioSourcePath, rawTranscript, speakerId, isCalltextProcessService) => {
-    return new Promise((resolve, reject) => {
-        addSession(audioSourcePath, rawTranscript, speakerId).then((sessionId) => {
-            return textProcessService("http://reqres.in/api/create", {
-                name: "paul rudd",
-                movies: ["I Love You Man", "Role Models"]
-            });
-        }).then((response) => {
-            return addTranscriptTosession(sessionId, rawTranscript);
-        }).then((docEffected) => {
-            return textProcessService("http://reqres.in/api/create", {
-                name: "paul rudd",
-                movies: ["I Love You Man", "Role Models"]
-            });
-        }).then((response) => {
-            // 
-        }).catch((err) => {
-
-        });
+let newSession = (meetingName, audioFileUrl, rawTranscript, speakerId) => {
+    // generate dialog form 
+    generateDialog(rawTranscript, speakerId).then((dialog) => {
+        // save dailog, audio path in db
+        return meetingService.insertDialog(meetingName, audioFileUrl);
     })
-});
-
-// "storage.drive.com", "Welcome to meet-asisst", ['1', '2', '3']
-let addSession = (meetingName, audioSourcePath, rawTranscript, speakerId) => {
-    return new Promise((resolve, reject) => {
-        const query = { projectName: process.env.REPO, name: meetingName };
-        const data = {
-            '$push':
-                {
-                    'sessions':
-                        {
-                            'audioFileUrl': audioSourcePath,
-                            'rawTranscript': rawTranscript,
-                            'speakerId': speakerId,
-                        }
-                }
-        };
-        const options = { multi: false };
-        Meeting.update(query, data, options, (err, docEffected) => {
-            if (err) {
-                reject(err);
-            } else {
-                Meeting.findOne(query, (err, docs) => {
-                    if (err) { reject(err); }
-                    else {
-                        resolve(docs.sessions[docs.sessions.length - 1]._id);
-                    }
-                });
-            }
-
-        });
-    });
 }
 
-let addKeywordsTosession = (meetingName, sessionId, keywords) => {
+let getSummary = (meetingName) => {
+    // get meeting dialog from db
+    // pass dailog to textProcessSerivece
+    // return textProcessService("http://reqres.in/api/create", {
+    //             name: "paul rudd",
+    //             movies: ["I Love You Man", "Role Models"]
+    //         });
+    // store response in DB
+    // send response to UI
     return new Promise((resolve, reject) => {
-        const query = { projectName: process.env.REPO, name: meetingName, 'sessions._id': sessionId };
-        const data = {
-            '$set': {
-                'sessions.$.keywords': keywords
-            }
-        };
-        const options = { multi: false };
-        Meeting.update(query, data, options, (err, docEffected) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(docEffected);
-            }
-
+        meetingService.get(meetingName).then((docs) => {
+            return textProcessService("http://reqres.in/api/create", {
+                name: "paul rudd",
+                movies: ["I Love You ", "Role Models"]
+            });
+        }).then((nlpResponse) => {
+            return meetingService.insertNlpResponse(meetingName, nlpResponse);
+        }).then(docsEffected => {
+            resolve(docsEffected);
+        }).catch(err => {
+            reject(err);
         });
     });
-}
 
-let addTranscriptTosession = (meetingName, sessionId, transcript) => {
-    return new Promise((resolve, reject) => {
-        const query = { projectName: process.env.REPO, name: meetingName, 'sessions._id': sessionId };
-        const data = {
-            '$set': {
-                'sessions.$.transcript': transcript
-            }
-        };
-        const options = { multi: false };
-        Meeting.update(query, data, options, (err, docEffected) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(docEffected);
-            }
-
-        });
-    });
-}
-
-let addQuestion = (meetingName, statement, status, answer) => {
-    return new Promise((resolve, reject) => {
-        const query = { projectName: process.env.REPO, name: meetingName };
-        const data = {
-            'questions':
-                {
-                    statement: statement,
-                    status: status,
-                    answer: answer,
-                }
-        };
-        const options = { multi: false };
-        Meeting.update(query, data, options, (err, docEffected) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(docEffected);
-            }
-
-        });
-    });
-}
-
-let addActionItem = (meetingName, action, assignees) => {
-    return new Promise((resolve, reject) => {
-        const query = { projectName: process.env.REPO, name: meetingName };
-        const data = {
-            '$push':
-                {
-                    'actionItems':
-                        {
-                            action: action,
-                            assignees: assignees,
-                            status: 'pending'
-                        }
-                }
-        };
-        const options = { multi: false };
-        Meeting.update(query, data, options, (err, docEffected) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(docEffected);
-            }
-        });
-    });
-}
-
-let addSummary = (meetingName, summary) => {
-    return new Promise((resolve, reject) => {
-        const query = { projectName: process.env.REPO, name: meetingName };
-        const data = {
-            'summary': summary
-        };
-        const options = { multi: false };
-        Meeting.update(query, data, options, (err, docEffected) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(docEffected);
-            }
-        });
-    });
 }
 
 module.exports = {
-    addSession,
-    addKeywordsTosession,
-    addTranscriptTosession,
-    addQuestion,
-    addActionItem,
-    addSummary,
-    sessionPipeline
+    newSession,
+    getSummary
 }
+

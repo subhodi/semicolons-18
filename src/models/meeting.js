@@ -1,17 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
-    session = {
-        audioFileUrl: String,
-        rawTranscript: Object,
-        speakerId: [String],
-        keywords: [String],
-        transcript: Object
-    },
-    question = {
+    dailog = {
+        person: String,
         statement: String,
-        status: String,
-        answer: String,
+        timestamp: String
     },
     actionItems = {
         action: String,
@@ -22,13 +15,14 @@ const Schema = mongoose.Schema,
 const meetingSchema = new Schema({
     id: ObjectId,
     name: String,
+    projectName: String,
     members: { type: Array, "default": [] },
     issues: { type: Array, "default": [] },
-    sessions: [session],
-    questions: [question],
+    audioFileUrl: String,
     actionItems: [actionItems],
-    summary: String,
-    projectName: String
+    summary: Object,
+    dialog: [Object],
+    nlpResponse: Object
 });
 
 const Meeting = mongoose.model('Meeting', meetingSchema);

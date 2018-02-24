@@ -1,7 +1,8 @@
+const request = require('request');
+
 const Meeting = require('../models/meeting');
 const Github = require('../helpers/github');
 const meetingUtil = require('../helpers/meeting');
-const sentenceUtil = require('../helpers/sentence');
 
 let getAll = (req, res, next) => {
     Meeting.find({}, (err, docs) => {
@@ -28,20 +29,6 @@ let get = (req, res, next) => {
     });
 }
 
-let update = (req, res, next) => {
-    const query = req.body.query;
-    const data = req.body.data;
-    const options = { multi: true };
-    Meeting.update(query, data, options, (err, docEffected) => {
-        if (err) { return next(err); }
-        else {
-            res.send({
-                status: 200,
-                message: 'Meeting data updation successfull'
-            })
-        }
-    });
-}
 
 let populate = (req, res, next) => {
     const meetingName = req.body.name; // 'day1'
@@ -73,17 +60,14 @@ let populate = (req, res, next) => {
     })
 }
 
-let newSession = (req, res, next) => {
-    const audioSourcePath = req.body.audioSourcePath;
-    const rawTranscript = req.body.rawTranscript;
-    const speakerId = req.body.speakerId;
-    meetingUtil.addSession(audioSourcePath, rawTranscript, speakerId).then((sessionId) => {
+let summary = (req, res, next) => {
+    const meetingName = req.body.name;
+    meetingUtil.getSummary(meetingName).then(response => {
         res.send({
             status: 200,
-            message: sessionId
+            message: response
         })
-        // REST call for keyword detection here(sessionId,rawTranscript)
-    }).catch((err) => {
+    }).catch(err => {
         return next(err);
     });
 }
@@ -91,7 +75,6 @@ let newSession = (req, res, next) => {
 module.exports = {
     getAll,
     get,
-    update,
     populate,
-    newSession
+    summary
 }

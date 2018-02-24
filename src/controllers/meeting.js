@@ -85,10 +85,27 @@ let remove = (req, res, next) => {
     });
 };
 
+let insertDailog = (req, res, next) => {
+    const meetingName = req.params.name;
+    const audioFileUrl = req.body.audioFileUrl;
+    const dialog = req.body.dialog;
+    meetingService
+        .insertDialog(meetingName, audioFileUrl, dialog)
+        .then(docEffected => {
+            res.send({
+                status: 200,
+                message: docEffected
+            })
+        }).catch(err => {
+            return next(err);
+        });
+}
+
 module.exports = {
     getAll,
     get,
     populate,
     summary,
-    remove
+    remove,
+    insertDailog
 }

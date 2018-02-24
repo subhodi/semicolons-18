@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema,
     ObjectId = Schema.ObjectId,
-    dailog = {
+    dialog = {
         person: String,
         statement: String,
         timestamp: String
@@ -21,7 +21,7 @@ const meetingSchema = new Schema({
     audioFileUrl: String,
     actionItems: [actionItems],
     summary: Object,
-    dialog: [Object],
+    dialog: [dialog],
     nlpResponse: Object
 });
 
